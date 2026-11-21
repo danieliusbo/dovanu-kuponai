@@ -5,22 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dovanų kuponai</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Manrope:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
-/* Personalised demo. URL params: n=name, k=type (salonas|kavine|spa|barber|studija), c=accent hex without #, a=amounts "25,50,100" */
-:root{--bg:#f4f5f2;--card:#fff;--fg:#1b1f1c;--muted:#626b65;--line:#dfe3de;--accent:#2f6b4f;--on:#fff;
+/* Personalised demo. URL params: n=name, k=type, c=accent hex without #, a=amounts "25,50,100". #tikrinti-CODE shows the owner's check view. */
+:root{--bg:#f4f5f2;--card:#fff;--fg:#1b1f1c;--muted:#626b65;--line:#dfe3de;--accent:#2f6b4f;--on:#fff;--ok:#15803d;
   --display:"Fraunces",Georgia,serif;--body:"Manrope",system-ui,sans-serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--body)}
 .banner{background:var(--fg);color:var(--bg);text-align:center;font-size:.85rem;padding:8px 16px}
-.wrap{max-width:980px;margin:0 auto;padding:36px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left));display:grid;gap:32px}
+.wrap{max-width:1040px;margin:0 auto;padding:36px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left));display:grid;gap:32px}
 header{display:grid;gap:8px}
-.brand{font:600 .8rem/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.brand{font:700 .8rem/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 h1{font:600 clamp(2rem,5vw,3rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:600 1.6rem/1.2 var(--display);margin:0}
 .sub{color:var(--muted);max-width:56ch;margin:0}
-.grid{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
-@media(max-width:780px){.grid{grid-template-columns:1fr}}
-form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:18px;min-width:0}
+.grid{display:grid;grid-template-columns:1fr 1.15fr;gap:28px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.preview{order:-1}}
+form,.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:18px;min-width:0}
 label{font-weight:600;font-size:.9rem;display:grid;gap:6px}
 input,textarea{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--fg);width:100%}
 textarea{resize:vertical;min-height:72px}
@@ -28,71 +29,107 @@ input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);
 .amounts{display:flex;flex-wrap:wrap;gap:8px}
 .amounts button{flex:1 1 70px;font:700 1rem var(--body);padding:12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 .amounts button[aria-pressed="true"]{background:var(--accent);color:var(--on);border-color:var(--accent)}
-.buy{font:700 1.05rem var(--body);padding:15px;border:0;border-radius:10px;background:var(--accent);color:var(--on);cursor:pointer}
+.btn{font:700 1.05rem var(--body);padding:15px 18px;border:0;border-radius:10px;background:var(--accent);color:var(--on);cursor:pointer;text-align:center}
+.btn.alt{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
 .note{font-size:.85rem;color:var(--muted);margin:0}
-.voucher{position:sticky;top:20px;aspect-ratio:1.6;max-width:100%;border-radius:16px;padding:26px;color:var(--on);
-  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#000));display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 40px -18px color-mix(in srgb,var(--accent) 70%,transparent)}
-.voucher .top{display:flex;justify-content:space-between;gap:12px;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.voucher .amt{font:600 clamp(2.4rem,7vw,3.6rem)/1 var(--display)}
-.voucher .to{font-size:.95rem;opacity:.95;overflow-wrap:anywhere}
-.voucher .code{font:600 .8rem ui-monospace,Menlo,monospace;letter-spacing:.12em;opacity:.8}
+.preview{position:sticky;top:20px;display:grid;gap:10px}
+canvas.v{width:100%;height:auto;display:block;border-radius:2.4%;filter:drop-shadow(0 18px 30px rgb(0 0 0/.18))}
 .perks{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.9rem;color:var(--muted);padding:0;margin:0;list-style:none}
 .perks li::before{content:"✓ ";color:var(--accent);font-weight:700}
-dialog{border:0;border-radius:14px;padding:24px;max-width:420px;background:var(--card);color:var(--fg)}
-dialog::backdrop{background:rgb(0 0 0/.45)}
-dialog button{margin-top:14px}
+.done{display:grid;gap:22px}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:start}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.status{display:flex;gap:12px;align-items:center;font-weight:700;font-size:1.1rem}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--ok);flex:none}
+.used .dot{background:#b45309}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.95rem}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.tag{font:700 .72rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 </style>
 </head>
 <body>
-<div class="banner" id="banner">Pavyzdys, paruoštas jums. Tikras puslapis veiks su jūsų mokėjimų sąskaita.</div>
+<div class="banner" id="banner">Pavyzdys, paruoštas jums.</div>
 <div class="wrap">
+
+  <section class="panel" id="check" hidden>
+    <span class="tag">Taip atrodo nuskenavus kupono QR kodą</span>
+    <div class="status" id="cstatus"><span class="dot"></span><span id="ctext">Kuponas galioja</span></div>
+    <dl class="kv"><dt>Kodas</dt><dd id="ccode"></dd><dt>Suma</dt><dd id="camt"></dd><dt>Verslas</dt><dd id="cname"></dd></dl>
+    <button class="btn" id="redeem" type="button">Pažymėti panaudotu</button>
+  </section>
+
   <header>
     <span class="brand" id="brand">Grožio salonas</span>
     <h1 id="title">Dovanų kuponai</h1>
-    <p class="sub" id="sub">Išsirinkite sumą, susimokėkite kortele ir iškart gaukite kuponą el. paštu. Puiki dovana Kalėdoms, net ir paskutinę minutę.</p>
-    <ul class="perks"><li>Kuponas atsiunčiamas iškart</li><li>Galioja 12 mėn.</li><li>Galima atsispausdinti</li></ul>
+    <p class="sub">Išsirinkite sumą, susimokėkite kortele ir iškart gaukite kuponą el. paštu. Puiki dovana Kalėdoms, net ir paskutinę minutę.</p>
+    <ul class="perks"><li>Kuponas atsiunčiamas iškart</li><li>Galioja 12 mėn.</li><li>Galima atsispausdinti</li><li>QR kodas patikrinimui</li></ul>
   </header>
-  <div class="grid">
+
+  <div class="grid" id="shop">
     <form id="f">
       <div style="display:grid;gap:6px"><span style="font-weight:600;font-size:.9rem">Kupono suma</span><div class="amounts" id="amounts"></div></div>
-      <label for="to">Kam dovanojate<input id="to" maxlength="40" placeholder="Pvz., Rūtai" value="Rūtai"></label>
-      <label for="msg">Palinkėjimas (nebūtina)<textarea id="msg" maxlength="120">Gražių švenčių! Skirk laiko sau.</textarea></label>
+      <label for="to">Kam dovanojate<input id="to" maxlength="30" value="Rūtai"></label>
+      <label for="msg">Palinkėjimas (nebūtina)<textarea id="msg" maxlength="90">Gražių švenčių! Skirk laiko sau.</textarea></label>
       <label for="em">Jūsų el. paštas<input id="em" type="email" placeholder="vardas@pastas.lt"></label>
-      <button class="buy" type="submit" id="buy">Pirkti kuponą</button>
+      <button class="btn" type="submit" id="buy">Pirkti kuponą</button>
       <p class="note">Saugus mokėjimas kortele, Apple Pay ar Google Pay.</p>
     </form>
-    <div class="voucher" aria-live="polite">
-      <div class="top"><span id="vname">Salonas</span><span>Dovanų kuponas</span></div>
-      <div><div class="amt" id="vamt">50 €</div><div class="to" id="vto">Rūtai · Gražių švenčių!</div></div>
-      <div class="code">KODAS · XMAS-7K3Q</div>
-    </div>
+    <div class="preview"><canvas class="v" id="cv" width="1600" height="1000" aria-label="Kupono peržiūra"></canvas></div>
   </div>
+
+  <section class="done" id="done" hidden>
+    <div><span class="tag">Po apmokėjimo (pavyzdys)</span><h2>Ačiū! Kuponas jau jūsų el. pašte.</h2></div>
+    <div class="two">
+      <div style="display:grid;gap:14px;min-width:0">
+        <canvas class="v" id="cv2" width="1600" height="1000" aria-label="Nupirktas kuponas"></canvas>
+        <div class="row"><button class="btn" id="dl" type="button">Atsisiųsti kuponą (PNG)</button><button class="btn alt" id="again" type="button">Pirkti dar vieną</button></div>
+      </div>
+      <div class="panel">
+        <span class="tag">Ką gauna verslas</span>
+        <p style="margin:0">Pranešimą apie kiekvieną pardavimą ir pinigus tiesiai į savo sąskaitą. Klientui atvykus, nuskenuojate QR kodą telefonu ir pažymite kuponą panaudotu. Jokių komisinių.</p>
+        <p class="note">Nuskenuokite kupono QR kodą telefonu ir pamatysite, kaip tai atrodo.</p>
+      </div>
+    </div>
+  </section>
 </div>
-<dialog id="d"><strong>Tai pavyzdys</strong><p>Tikrame puslapyje čia atsidaro mokėjimas, o pirkėjas iškart gauna kuponą el. paštu.</p><button class="buy" id="close" type="button">Supratau</button></dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="../assets/voucher.js"></script>
 <script>
-const q=new URLSearchParams(location.search);
+const V=window.Voucher, q=new URLSearchParams(location.search);
 const name=(q.get("n")||"Jūsų salonas").slice(0,40);
-const types={salonas:"Grožio salonas",kavine:"Kavinė",spa:"Masažai ir SPA",barber:"Barberių studija",studija:"Studija",pabegimo:"Pabėgimo kambarys"};
 const hex=(q.get("c")||"").replace(/[^0-9a-f]/gi,"");
-if(hex.length===6) document.documentElement.style.setProperty("--accent","#"+hex);
+const color=hex.length===6?"#"+hex:"#2f6b4f";
+document.documentElement.style.setProperty("--accent",color);
 const amounts=(q.get("a")||"25,50,100").split(",").map(Number).filter(x=>x>0&&x<10000).slice(0,5);
 document.title=name+" · Dovanų kuponai";
-document.getElementById("brand").textContent=types[q.get("k")]||types.salonas;
+document.getElementById("brand").textContent=V.TYPES[q.get("k")]||V.TYPES.salonas;
 document.getElementById("title").textContent=name+" dovanų kuponai";
 document.getElementById("banner").textContent="Pavyzdys, paruoštas: "+name+". Tikras puslapis veiks su jūsų mokėjimų sąskaita.";
-document.getElementById("vname").textContent=name;
-let amt=amounts[1]||amounts[0];
-const box=document.getElementById("amounts");
+
+let amt=amounts[1]||amounts[0], code=V.code();
+const box=document.getElementById("amounts"), to=document.getElementById("to"), msg=document.getElementById("msg");
 amounts.forEach(v=>{const b=document.createElement("button");b.type="button";b.textContent=v+" €";
   b.setAttribute("aria-pressed",v===amt);b.onclick=()=>{amt=v;[...box.children].forEach(x=>x.setAttribute("aria-pressed",x===b));render()};box.append(b)});
-const to=document.getElementById("to"),msg=document.getElementById("msg");
-function render(){document.getElementById("vamt").textContent=amt+" €";
-  document.getElementById("vto").textContent=[to.value.trim(),msg.value.trim()].filter(Boolean).join(" · ");
-  document.getElementById("buy").textContent="Pirkti kuponą · "+amt+" €"}
-to.oninput=msg.oninput=render;render();
-const d=document.getElementById("d");
-document.getElementById("f").onsubmit=e=>{e.preventDefault();d.showModal()};
-document.getElementById("close").onclick=()=>d.close();
+
+function checkUrl(){const u=new URL(location.href);u.searchParams.set("v",amt);u.hash="tikrinti-"+code;return u.toString()}
+function opts(){return{name,color,amount:amt,to:to.value.trim(),message:msg.value.trim(),code,valid:V.validUntil(),qr:checkUrl()}}
+function paint(id){const c=document.getElementById(id),x=c.getContext("2d");x.clearRect(0,0,1600,1000);V.drawVoucher(x,opts())}
+function render(){paint("cv");document.getElementById("buy").textContent="Pirkti kuponą · "+amt+" €"}
+to.oninput=msg.oninput=render;
+
+document.getElementById("f").onsubmit=e=>{e.preventDefault();paint("cv2");
+  document.getElementById("shop").hidden=true;const d=document.getElementById("done");d.hidden=false;d.scrollIntoView({behavior:"smooth"})};
+document.getElementById("dl").onclick=()=>V.download(document.getElementById("cv2"),"kuponas-"+V.slug(name)+".png");
+document.getElementById("again").onclick=()=>{code=V.code();render();document.getElementById("done").hidden=true;document.getElementById("shop").hidden=false};
+
+function showCheck(){const m=location.hash.match(/^#tikrinti-([A-Z0-9-]{4,20})$/);const p=document.getElementById("check");
+  if(!m){p.hidden=true;return}p.hidden=false;
+  document.getElementById("ccode").textContent=m[1];document.getElementById("camt").textContent=(q.get("v")||amt)+" €";document.getElementById("cname").textContent=name}
+document.getElementById("redeem").onclick=e=>{const s=document.getElementById("cstatus");s.classList.add("used");
+  document.getElementById("ctext").textContent="Panaudotas "+new Date().toLocaleDateString("lt-LT");e.target.disabled=true;e.target.textContent="Pažymėta"};
+addEventListener("hashchange",showCheck);
+V.fontsReady().then(()=>{render();showCheck()});
 </script>
 </body>
 </html>

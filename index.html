@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dovanų kuponai internetu per 24 val.</title>
 <meta name="description" content="Internetinis dovanų kuponų puslapis jūsų salonui ar kavinei per 24 valandas. 99 €, mokate tik kai veikia.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: one column sales page; hero with live voucher demo, problem, how, price, FAQ, contact */
 :root{--bg:#f6f7f9;--card:#fff;--fg:#121722;--muted:#5b6474;--line:#dfe3ea;--accent:#1f4fd1;--on:#fff;--hl:#e8eefc;
@@ -35,6 +35,14 @@ details{background:var(--card);border:1px solid var(--line);border-radius:10px;p
 summary{font-weight:700;cursor:pointer}
 details p{margin-top:8px;color:var(--muted)}
 footer{padding-block:40px;color:var(--muted);font-size:.9rem}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:.8rem;color:var(--muted);font-weight:600}
+td.us{font-weight:700;color:var(--accent)}
+.kit{display:grid;grid-template-columns:1fr .56fr;gap:16px;align-items:start;max-width:640px}
+.kit canvas{width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 </head>
@@ -59,6 +67,26 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
     <div class="step"><b>Paleidžiu per 24 val.</b><span>Puslapis su jūsų pavadinimu ir mokėjimais tiesiai į jūsų sąskaitą.</span></div>
     <div class="step"><b>Dalinatės nuoroda</b><span>Instagram, Facebook, Google Maps. Pirkėjai kuponą gauna automatiškai.</span></div>
   </div>
+</section>
+
+<section>
+  <h2>Kalėdiniai įrašai įskaičiuoti</h2>
+  <p>Kuponai perkami tik tada, kai žmonės apie juos žino. Kartu su puslapiu gaunate paruoštą Instagram įrašą ir istoriją jūsų spalvomis, su tekstu, kurį tereikia įkelti.</p>
+  <div class="kit"><canvas id="kpost" width="1080" height="1080" aria-label="Instagram įrašo pavyzdys"></canvas><canvas id="kstory" width="1080" height="1920" aria-label="Instagram istorijos pavyzdys"></canvas></div>
+</section>
+
+<section>
+  <h2>Kuo tai kitaip nei savitarnos platformos?</h2>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Su manimi</th><th>Savitarnos kuponų platformos</th></tr></thead>
+    <tbody>
+      <tr><td>Kas viską nustato</td><td class="us">Aš, per 24 val.</td><td>Jūs patys</td></tr>
+      <tr><td>Komisiniai nuo pardavimų</td><td class="us">0 %</td><td>Dažnai 3–5 % nuo kiekvieno kupono</td></tr>
+      <tr><td>Kalėdiniai Instagram įrašai</td><td class="us">Įskaičiuoti</td><td>Nėra</td></tr>
+      <tr><td>Kuponas su QR kodu ir patikrinimu</td><td class="us">Taip</td><td>Taip</td></tr>
+      <tr><td>Kaina</td><td class="us">99 € vieną kartą, po paleidimo</td><td>Prenumerata arba procentas</td></tr>
+    </tbody>
+  </table></div>
 </section>
 
 <section>
@@ -91,5 +119,11 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </section>
 <footer>[Vardas Pavardė], individuali veikla, pažymos nr. [xxxxxxx]</footer>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="assets/voucher.js"></script>
+<script>
+Voucher.fontsReady().then(()=>{const o={name:"Jūsų salonas",color:"#8a3b5c",amount:50,to:"Rūtai",message:"Gražių švenčių! Skirk laiko sau.",code:"XMAS-7K3Q",valid:Voucher.validUntil(),qr:location.href};
+  Voucher.drawPost(document.getElementById("kpost").getContext("2d"),o);Voucher.drawStory(document.getElementById("kstory").getContext("2d"),o)});
+</script>
 </body>
 </html>

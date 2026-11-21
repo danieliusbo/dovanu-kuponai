@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Outreach Kit</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Internal tool: per prospect -> demo link, DM text, Instagram post/story, contact log. */
+:root{--bg:#f3f4f7;--card:#fff;--fg:#151a23;--muted:#5d6676;--line:#dde1e8;--accent:#1f4fd1;--on:#fff;--body:"Manrope",system-ui,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0f131a;--card:#171c25;--fg:#e8ecf2;--muted:#9aa4b5;--line:#2a3140;--accent:#7ea2ff;--on:#0f131a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left));display:grid;gap:20px}
+h1{font:700 1.5rem/1.2 var(--body);margin:0}
+h2{font:700 1.05rem/1.2 var(--body);margin:0}
+.cols{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px;min-width:0}
+label{display:grid;gap:5px;font-weight:600;font-size:.85rem}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);width:100%}
+input[type=color]{padding:2px;height:40px}
+textarea{min-height:170px;resize:vertical}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:700 .9rem var(--body);padding:10px 14px;border:0;border-radius:8px;background:var(--accent);color:var(--on);cursor:pointer}
+.btn.alt{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:focus-visible,input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
+.link{font-family:ui-monospace,Menlo,monospace;font-size:.8rem;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px;overflow-wrap:anywhere}
+.imgs{display:grid;grid-template-columns:1fr .56fr 1fr;gap:14px;align-items:start}
+@media(max-width:700px){.imgs{grid-template-columns:1fr}}
+.imgs figure{margin:0;display:grid;gap:8px}
+.imgs canvas{width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+figcaption{font-size:.8rem;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font:600 .85rem var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+.stats{display:flex;flex-wrap:wrap;gap:18px;font-variant-numeric:tabular-nums}
+.stats b{font-size:1.3rem;display:block}
+.scroll{overflow-x:auto}
+.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 14px;border-radius:8px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Outreach kit</h1>
+  <div class="cols">
+    <div class="card">
+      <h2>Verslas</h2>
+      <label for="me">Tavo vardas<input id="me" placeholder="Vardas"></label>
+      <label for="name">Verslo pavadinimas<input id="name" value="Salonas Rasa"></label>
+      <label for="type">Tipas<select id="type"></select></label>
+      <label for="color">Spalva (iš jų logotipo ar Instagram)<input id="color" type="color" value="#8a3b5c"></label>
+      <label for="amts">Sumos, €<input id="amts" value="25,50,100"></label>
+      <label for="logo">Logotipas (nebūtina, tik paveikslėliams)<input id="logo" type="file" accept="image/*"></label>
+      <label for="ch">Kanalas<select id="ch"><option value="ig">Instagram</option><option value="fb">Messenger</option><option value="email">El. paštas</option><option value="ad">Iš reklamos</option></select></label>
+      <button class="btn" id="log" type="button">Pažymėti kaip išsiųsta</button>
+    </div>
+    <div style="display:grid;gap:20px;min-width:0">
+      <div class="card">
+        <h2>Demo nuoroda</h2>
+        <div class="link" id="url"></div>
+        <div class="row"><button class="btn" id="cpUrl" type="button">Kopijuoti nuorodą</button><a class="btn alt" id="open" target="_blank" rel="noopener" style="text-decoration:none">Atidaryti</a></div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h2>Žinutė</h2>
+          <div class="tabs" id="tabs"><button type="button" data-t="dm" aria-pressed="true">DM</button><button type="button" data-t="email" aria-pressed="false">El. laiškas</button><button type="button" data-t="fu" aria-pressed="false">Priminimas</button><button type="button" data-t="kit" aria-pressed="false">Tik įrašai 49 €</button></div></div>
+        <label for="text" style="font-weight:400">Pakeisk pirmą sakinį kiekvienam verslui, kad žinutės nesikartotų.<textarea id="text"></textarea></label>
+        <div class="row"><button class="btn" id="cpText" type="button">Kopijuoti žinutę</button></div>
+      </div>
+      <div class="card">
+        <h2>Paveikslėliai (prisek prie žinutės)</h2>
+        <div class="imgs">
+          <figure><canvas id="post" width="1080" height="1080"></canvas><button class="btn alt" data-dl="post" type="button">Instagram įrašas</button></figure>
+          <figure><canvas id="story" width="1080" height="1920"></canvas><button class="btn alt" data-dl="story" type="button">Istorija</button></figure>
+          <figure><canvas id="voucher" width="1600" height="1000"></canvas><button class="btn alt" data-dl="voucher" type="button">Kuponas</button><figcaption>Pavyzdinis kuponas su QR kodu</figcaption></figure>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h2>Kontaktų žurnalas</h2><button class="btn alt" id="csv" type="button">Atsisiųsti CSV</button></div>
+        <div class="stats" id="stats"></div>
+        <div class="scroll"><table><thead><tr><th>Data</th><th>Verslas</th><th>Kanalas</th><th>Būsena</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <p style="margin:0;color:var(--muted);font-size:.8rem">Žurnalas saugomas tik šioje naršyklėje. Kas vakarą atsisiųsk CSV.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="../assets/voucher.js"></script>
+<script>
+const V=window.Voucher, $=id=>document.getElementById(id);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+Object.entries(V.TYPES).forEach(([k,v])=>$("type").append(new Option(v,k)));
+$("me").value=store.get("me","");
+let logo=null, tab="dm";
+const demoBase=new URL("../demo/",location.href);
+
+function data(){return{name:$("name").value.trim()||"Jūsų salonas",type:$("type").value,color:$("color").value,amts:$("amts").value.replace(/[^0-9,]/g,""),me:$("me").value.trim()||"[vardas]"}}
+function demoUrl(d){const u=new URL(demoBase);u.searchParams.set("n",d.name);u.searchParams.set("k",d.type);u.searchParams.set("c",d.color.slice(1));if(d.amts&&d.amts!=="25,50,100")u.searchParams.set("a",d.amts);return u.toString()}
+const T={
+ dm:(d,u)=>`Sveiki! Mačiau, kad ${d.name} dovanų kuponus parduoda per žinutes. Padariau jums pavyzdį, kaip atrodytų kuponų puslapis: klientas pats išsirenka sumą, susimoka kortele ir iškart gauna kuponą su QR kodu, net naktį prieš Kalėdas:\n${u}\n\nPrisegu ir kalėdinį Instagram įrašą su jūsų spalvomis.\n\nPaleidžiu per 24 val. už 99 €, be jokių komisinių, ir mokate tik kai jau veikia. Ar norėtumėte, kad paleisčiau šią savaitę?\n\n${d.me}`,
+ email:(d,u)=>`Tema: ${d.name} dovanų kuponai internetu iki Kalėdų\n\nSveiki,\n\nesu ${d.me}, kuriu internetinius dovanų kuponų puslapius vietiniams verslams. Padariau pavyzdį ${d.name}:\n${u}\n\nKlientas išsirenka sumą, susimoka kortele ir iškart gauna kuponą su QR kodu. Jūs gaunate pinigus tiesiai į savo sąskaitą, be komisinių. Prisegu ir paruoštą kalėdinį Instagram įrašą.\n\nPaleidžiu per 24 val. už 99 €, mokate tik kai veikia.\n\nPagarbiai,\n${d.me}\n\nJei tai neaktualu, tiesiog atsakykite „ne“ ir daugiau nerašysiu.`,
+ fu:(d,u)=>`Sveiki dar kartą! Iki Kalėdų liko ${Math.max(0,Math.ceil((new Date(new Date().getFullYear(),11,24)-new Date())/864e5))} d., o daugiausia kuponų nuperkama paskutinę savaitę. Jūsų pavyzdys vis dar čia: ${u}\nJei norite, paleisiu jūsų puslapį per 24 val.`,
+ kit:(d,u)=>`Sveiki! Mačiau, kad ${d.name} jau turi dovanų kuponus, bet Instagram jų beveik nesimato. Padariau jums kalėdinį įrašą ir istoriją su jūsų spalvomis (prisegu).\n\nUž 49 € paruošiu visą kalėdinį rinkinį: įrašą, istoriją, Google Maps įrašą ir tekstus, kad kuponai būtų perkami dažniau. Ar įdomu?\n\n${d.me}`
+};
+function opts(d){return{name:d.name,color:d.color,amount:(d.amts.split(",").map(Number).filter(Boolean)[1])||50,to:"Rūtai",message:"Gražių švenčių! Skirk laiko sau.",code:"XMAS-7K3Q",valid:V.validUntil(),qr:demoUrl(d),logo}}
+function draw(){const d=data(),u=demoUrl(d),o=opts(d);
+  $("url").textContent=u;$("open").href=u;$("text").value=T[tab](d,u);
+  for(const [id,fn,w,h] of [["post",V.drawPost,1080,1080],["story",V.drawStory,1080,1920],["voucher",V.drawVoucher,1600,1000]]){const x=$(id).getContext("2d");x.clearRect(0,0,w,h);fn(x,o)}
+  store.set("me",$("me").value.trim())}
+["me","name","type","color","amts"].forEach(id=>$(id).addEventListener("input",draw));
+$("logo").onchange=e=>{const f=e.target.files[0];if(!f){logo=null;draw();return}const i=new Image();i.onload=()=>{logo=i;draw()};i.src=URL.createObjectURL(f)};
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;tab=b.dataset.t;[...$("tabs").children].forEach(x=>x.setAttribute("aria-pressed",x===b));draw()};
+function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1600)}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast("Nukopijuota")}catch(e){toast("Nepavyko, pažymėk ir kopijuok ranka")}}
+$("cpUrl").onclick=()=>copy($("url").textContent);$("cpText").onclick=()=>copy($("text").value);
+document.querySelectorAll("[data-dl]").forEach(b=>b.onclick=()=>V.download($(b.dataset.dl),`${V.slug(data().name)}-${b.dataset.dl}.png`));
+
+const STATES=["išsiųsta","atsakė","domisi","sumokėjo","atsisakė"];
+let log=store.get("log",[]);
+function renderLog(){const tb=$("rows");tb.innerHTML="";
+  log.slice().reverse().forEach((r,ri)=>{const i=log.length-1-ri,tr=document.createElement("tr");
+    const sel=document.createElement("select");STATES.forEach(s=>sel.append(new Option(s,s)));sel.value=r.s;sel.onchange=()=>{log[i].s=sel.value;store.set("log",log);renderLog()};
+    [r.d,r.n,r.c].forEach(t=>{const td=document.createElement("td");td.textContent=t;tr.append(td)});const td=document.createElement("td");td.append(sel);tr.append(td);tb.append(tr)});
+  const n=log.length,cnt=a=>log.filter(r=>a.includes(r.s)).length;
+  const rep=cnt(["atsakė","domisi","sumokėjo","atsisakė"]),paid=cnt(["sumokėjo"]);
+  $("stats").innerHTML="";[["Išsiųsta",n],["Atsakė",rep+(n?` (${(rep/n*100).toFixed(1)}%)`:"")],["Domisi",cnt(["domisi","sumokėjo"])],["Sumokėjo",paid],["Uždirbta",paid*99+" €"]].forEach(([k,v])=>{const s=document.createElement("span");s.innerHTML=`<b></b>${k}`;s.firstChild.textContent=v;$("stats").append(s)})}
+$("log").onclick=()=>{log.push({d:new Date().toISOString().slice(0,10),n:data().name,c:$("ch").value,s:"išsiųsta"});store.set("log",log);renderLog();toast("Įrašyta")};
+$("csv").onclick=()=>{const csv="data,verslas,kanalas,busena\n"+log.map(r=>[r.d,r.n,r.c,r.s].map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="kontaktai.csv";a.click()};
+V.fontsReady().then(()=>{draw();renderLog()});
+</script>
+</body>
+</html>
